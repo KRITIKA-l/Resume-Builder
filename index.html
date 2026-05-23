@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Builder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="panel form-panel">
+      <div class="panel-head">
+        <h1>Resume Builder</h1>
+        <p>Fill in the details once, then generate a polished resume.</p>
+      </div>
+
+      <form id="resume-form" class="resume-form">
+        <section class="form-section">
+          <h2>Personal Details</h2>
+          <div class="grid-2">
+            <label>Full name<input name="name" value="" placeholder="Your full name" required></label>
+          </div>
+          <div class="grid-2">
+            <label>Email<input name="email" type="email" value="" placeholder="you@example.com" required></label>
+            <label>Phone<input name="phone" value="" placeholder="+91-XXXXXXXXXX" required></label>
+          </div>
+          <div class="grid-2">
+            <label>LinkedIn<input name="linkedin" value="" placeholder="https://linkedin.com/in/your-profile" required></label>
+            <label>GitHub<input name="github" value="" placeholder="https://github.com/your-username" required></label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Education</h2>
+          <div class="repeat-card">
+            <div class="grid-2">
+              <label>Degree<input name="education1Degree" value="" placeholder="Degree / class" required></label>
+              <label>Institute<input name="education1Institute" value="" placeholder="School / college name" required></label>
+            </div>
+            <div class="grid-2">
+              <label>Duration<input name="education1Duration" value="" placeholder="Start - End" required></label>
+              <label>Location<input name="education1Location" value="" placeholder="City, State" required></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Experience</h2>
+          <div id="experience-form" class="repeatable-list"></div>
+          <button type="button" class="add-btn" data-add="experience">Add experience</button>
+        </section>
+
+        <section class="form-section">
+          <h2>Skills</h2>
+          <div id="skills-form" class="repeatable-list"></div>
+          <button type="button" class="add-btn" data-add="skill">Add skill category</button>
+        </section>
+
+        <section class="form-section">
+          <h2>Certifications</h2>
+          <div id="certifications-form" class="repeatable-list"></div>
+          <button type="button" class="add-btn" data-add="certificate">Add certificate</button>
+        </section>
+
+        <section class="form-section">
+          <h2>Projects</h2>
+          <div id="projects-form" class="repeatable-list"></div>
+          <button type="button" class="add-btn" data-add="project">Add project</button>
+        </section>
+
+        <div class="form-actions">
+          <button type="submit">Generate Resume</button>
+          <button type="button" id="print-btn">Print / Save PDF</button>
+          <button type="button" id="reset-btn" class="secondary">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel preview-panel">
+      <div class="panel-head">
+        <div class="panel-head-row">
+          <h2>Preview</h2>
+          <span class="live-badge">Live</span>
+        </div>
+        <p>Updates in real time as you type.</p>
+      </div>
+
+      <article class="resume-page">
+        <header class="header">
+          <div class="name-wrap">
+            <h1 id="name">Kritika Garg</h1>
+          </div>
+          <ul class="contact-list" aria-label="Contact details" id="contact-list"></ul>
+        </header>
+
+        <section class="content-grid">
+          <aside class="sidebar">
+            <section class="block">
+              <h2>Education</h2>
+              <div id="education"></div>
+            </section>
+
+            <section class="block">
+              <h2>Skills</h2>
+              <div id="skills"></div>
+            </section>
+
+            <section class="block">
+              <h2>Certifications</h2>
+              <ul id="certifications" class="bullets"></ul>
+            </section>
+          </aside>
+
+          <section class="main-column">
+            <section class="block">
+              <h2>Experience</h2>
+              <div id="experience"></div>
+            </section>
+
+            <section class="block">
+              <h2>Projects</h2>
+              <div id="projects" class="projects"></div>
+            </section>
+          </section>
+        </section>
+      </article>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
