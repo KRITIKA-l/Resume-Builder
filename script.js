@@ -12,12 +12,15 @@ const skillsForm = document.getElementById('skills-form');
 const certificationsForm = document.getElementById('certifications-form');
 const projectsForm = document.getElementById('projects-form');
 const experienceForm = document.getElementById('experience-form');
+const educationForm = document.getElementById('education-form');
+const storageKey = 'resume-builder-state';
 
 const iconPaths = {
   email: 'M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm0 2 8 5 8-5',
   phone: 'M8.5 3.5h3l1.1 5-2 1.8a12 12 0 0 0 5.1 5.1l1.8-2 5 1.1v3a2 2 0 0 1-2 2C12.3 19.5 4.5 11.7 4.5 5.5a2 2 0 0 1 2-2Z',
   linkedin: 'M7 8v12M7 5.2v.6M11 20V8h4v1.9c.6-1.1 1.9-2.2 4-2.2 2.8 0 4 1.8 4 5V20',
-  github: 'M12 3a9 9 0 0 0-2.8 17.5c.4.1.5-.2.5-.4v-1.5c-2.1.5-2.6-1-2.6-1-.4-1-.9-1.3-.9-1.3-.8-.6.1-.6.1-.6.9.1 1.4 1 1.4 1 .8 1.4 2.1 1 2.7.8.1-.6.3-1 .6-1.2-1.7-.2-3.5-.9-3.5-4.1 0-.9.3-1.6.9-2.2-.1-.2-.4-1 .1-2.1 0 0 .8-.3 2.5 1a8.6 8.6 0 0 1 4.6 0c1.7-1.3 2.5-1 2.5-1 .5 1.1.2 1.9.1 2.1.6.6.9 1.3.9 2.2 0 3.2-1.8 3.9-3.5 4.1.3.3.6.8.6 1.6v2.3c0 .2.1.5.5.4A9 9 0 0 0 12 3Z'
+  github: 'M12 3a9 9 0 0 0-2.8 17.5c.4.1.5-.2.5-.4v-1.5c-2.1.5-2.6-1-2.6-1-.4-1-.9-1.3-.9-1.3-.8-.6.1-.6.1-.6.9.1 1.4 1 1.4 1 .8 1.4 2.1 1 2.7.8.1-.6.3-1 .6-1.2-1.7-.2-3.5-.9-3.5-4.1 0-.9.3-1.6.9-2.2-.1-.2-.4-1 .1-2.1 0 0 .8-.3 2.5 1a8.6 8.6 0 0 1 4.6 0c1.7-1.3 2.5-1 2.5-1 .5 1.1.2 1.9.1 2.1.6.6.9 1.3.9 2.2 0 3.2-1.8 3.9-3.5 4.1.3.3.6.8.6 1.6v2.3c0 .2.1.5.5.4A9 9 0 0 0 12 3Z',
+  calendar: 'M7 3v3M17 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z'
 };
 
 const initialState = () => ({
@@ -62,7 +65,38 @@ const initialState = () => ({
   ]
 });
 
-const state = initialState();
+function loadState() {
+  const fallback = initialState();
+
+  try {
+    const saved = localStorage.getItem(storageKey);
+    if (!saved) return fallback;
+
+    const parsed = JSON.parse(saved);
+    return {
+      ...fallback,
+      ...parsed,
+      contact: { ...fallback.contact, ...(parsed.contact || {}) },
+      education: Array.isArray(parsed.education) && parsed.education.length ? parsed.education : fallback.education,
+      experience: Array.isArray(parsed.experience) && parsed.experience.length ? parsed.experience : fallback.experience,
+      skills: Array.isArray(parsed.skills) && parsed.skills.length ? parsed.skills : fallback.skills,
+      certifications: Array.isArray(parsed.certifications) && parsed.certifications.length ? parsed.certifications : fallback.certifications,
+      projects: Array.isArray(parsed.projects) && parsed.projects.length ? parsed.projects : fallback.projects
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  } catch {
+    // Ignore storage failures, such as private mode or quota limits.
+  }
+}
+
+const state = loadState();
 
 function splitLines(value) {
   return value
@@ -136,7 +170,16 @@ function renderEducation() {
         <div class="entry">
           <h3>${item.degree}</h3>
           <p>${item.institute}</p>
-          <div class="meta">${item.duration}${item.duration && item.location ? ' | ' : ''}${item.location}</div>
+          <div class="meta meta-with-icon">
+            ${item.duration ? `
+              <svg class="meta-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="${iconPaths.calendar}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>${item.duration}</span>
+            ` : ''}
+            ${item.duration && item.location ? '<span class="meta-separator">|</span>' : ''}
+            ${item.location ? `<span>${item.location}</span>` : ''}
+          </div>
         </div>
       `
     )
@@ -223,6 +266,24 @@ function renderProjects() {
 }
 
 function renderRepeatableForms() {
+  educationForm.innerHTML = state.education
+    .map(
+      (item, index) => `
+        <div class="repeat-card repeatable-item repeat-card-compact">
+          <button type="button" class="remove-btn" data-remove="education" data-index="${index}">Remove</button>
+          <div class="grid-2">
+            <label>School / degree<input data-list="education" data-index="${index}" data-field="degree" value="${item.degree}" placeholder="Degree / class"></label>
+            <label>Institute<input data-list="education" data-index="${index}" data-field="institute" value="${item.institute}" placeholder="School / college name"></label>
+          </div>
+          <div class="grid-2">
+            <label>Dates<input data-list="education" data-index="${index}" data-field="duration" value="${item.duration}" placeholder="Start - End"></label>
+            <label>Location<input data-list="education" data-index="${index}" data-field="location" value="${item.location}" placeholder="City, State"></label>
+          </div>
+        </div>
+      `
+    )
+    .join('');
+
   skillsForm.innerHTML = state.skills
     .map(
       (group, index) => `
@@ -299,14 +360,6 @@ function syncFixedFields() {
   };
 
   nameHeading.textContent = state.contact.name;
-
-  state.education = [1].map((index) => ({
-    degree: form.elements[`education${index}Degree`].value.trim(),
-    institute: form.elements[`education${index}Institute`].value.trim(),
-    duration: form.elements[`education${index}Duration`].value.trim(),
-    location: form.elements[`education${index}Location`].value.trim()
-  }));
-
 }
 
 function syncDynamicField(target) {
@@ -320,6 +373,11 @@ function syncDynamicField(target) {
 
   if (listName === 'skills' && field === 'skills') {
     item.skills = splitFlexible(target.value);
+    return;
+  }
+
+  if (listName === 'education') {
+    item[field] = target.value.trim();
     return;
   }
 
@@ -344,6 +402,7 @@ function syncFromForm() {
   renderExperience();
   renderCertifications();
   renderProjects();
+  saveState();
 }
 
 function addItem(type) {
@@ -360,6 +419,9 @@ function addItem(type) {
   }
   if (type === 'experience') {
     state.experience.push({ title: '', company: '', duration: '', location: '', bullets: [''] });
+  }
+  if (type === 'education') {
+    state.education.push({ degree: '', institute: '', duration: '', location: '' });
   }
 
   renderRepeatableForms();
@@ -383,6 +445,10 @@ function removeItem(type, index) {
     state.experience.splice(index, 1);
   }
 
+  if (type === 'education' && state.education.length > 1) {
+    state.education.splice(index, 1);
+  }
+
   renderRepeatableForms();
   syncFromForm();
 }
@@ -401,6 +467,7 @@ form.addEventListener('input', (event) => {
   renderExperience();
   renderCertifications();
   renderProjects();
+  saveState();
 });
 
 form.addEventListener('click', (event) => {
@@ -423,6 +490,11 @@ form.addEventListener('submit', (event) => {
 
 resetButton.addEventListener('click', () => {
   Object.assign(state, initialState());
+  try {
+    localStorage.removeItem(storageKey);
+  } catch {
+    // Ignore storage failures.
+  }
   form.reset();
   renderRepeatableForms();
   syncFromForm();

@@ -141,6 +141,10 @@ body {
   background: var(--soft);
 }
 
+.repeat-card-compact {
+  padding: 10px 12px;
+}
+
 .repeatable-list {
   display: grid;
   gap: 10px;
@@ -318,7 +322,7 @@ body {
 }
 
 .entry {
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -344,6 +348,36 @@ body {
 .meta {
   color: var(--muted);
   margin-top: 0;
+}
+
+.meta-with-icon {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.meta-icon {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  color: #65758b;
+}
+
+.meta-separator {
+  color: var(--muted);
+}
+
+#education .entry {
+  margin-bottom: 3px;
+}
+
+#education .entry h3 {
+  margin-bottom: 1px;
+}
+
+#education .entry p {
+  margin-bottom: 1px;
 }
 
 .sidebar .meta {
