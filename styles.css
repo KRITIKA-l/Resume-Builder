@@ -8,6 +8,9 @@
   --accent: #1f4c8f;
   --accent-soft: rgba(31, 76, 143, 0.06);
   --paper: #ffffff;
+  --accent-2: #7a4b1d;
+  --accent-3: #5d3fd3;
+  --accent-4: #0f766e;
 }
 
 * {
@@ -78,6 +81,31 @@ body {
   margin: 4px 0 0;
   color: var(--muted);
   font-size: 13px;
+}
+
+.template-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 2px;
+}
+
+.template-chip {
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: #fff;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.template-chip.active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .form-panel {

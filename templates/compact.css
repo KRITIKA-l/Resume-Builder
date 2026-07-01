@@ -1,0 +1,149 @@
+.resume-page[data-template="compact"] {
+  --accent: #2f5b5f;
+  --accent-soft: rgba(47, 91, 95, 0.07);
+  --paper: #fcfcfb;
+  --muted: #56606e;
+  font-size: 0.96rem;
+  padding: 0.23in 0.28in 0.26in;
+}
+
+.resume-page[data-template="compact"] .header {
+  display: block;
+  text-align: left;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(47, 91, 95, 0.18);
+}
+
+.resume-page[data-template="compact"] .contact-list {
+  justify-content: flex-start;
+  padding-bottom: 0;
+  margin: 6px 0 0;
+  border-bottom: 0;
+}
+
+.resume-page[data-template="compact"] .content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.resume-page[data-template="compact"] .main-column {
+  display: grid;
+  gap: 6px;
+}
+
+.resume-page[data-template="compact"] .compact-footer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding-top: 8px;
+  margin-top: 2px;
+  border-top: 1px solid rgba(47, 91, 95, 0.14);
+}
+
+.resume-page[data-template="compact"] .block {
+  margin-bottom: 0;
+  padding-left: 0;
+  background: transparent;
+}
+
+.resume-page[data-template="compact"] .block h2 {
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+}
+
+.resume-page[data-template="compact"] .entry,
+.resume-page[data-template="compact"] .project-item,
+.resume-page[data-template="compact"] .skill-group {
+  margin-bottom: 0;
+}
+
+.resume-page[data-template="compact"] .projects {
+  gap: 2px;
+}
+
+.resume-page[data-template="compact"] .skill-tags {
+  gap: 4px;
+}
+
+.resume-page[data-template="compact"] .skill-tag {
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.resume-page[data-template="compact"] .bullets {
+  padding-left: 14px;
+  margin-top: 2px;
+}
+
+.resume-page[data-template="compact"] .bullets li,
+.resume-page[data-template="compact"] .project-tech,
+.resume-page[data-template="compact"] .entry p,
+.resume-page[data-template="compact"] .meta,
+.resume-page[data-template="compact"] .skill-tag {
+  font-size: 10px;
+}
+
+.resume-page[data-template="compact"] .header h1 {
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.resume-page[data-template="compact"] .project-item h3,
+.resume-page[data-template="compact"] .entry h3 {
+  font-size: 11.2px;
+}
+
+.resume-page[data-template="compact"] .compact-footer .block {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.resume-page[data-template="compact"] .main-column .block {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.resume-page[data-template="compact"] .entry,
+.resume-page[data-template="compact"] .project-item {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.resume-page[data-template="compact"] .compact-footer .block h2,
+.resume-page[data-template="compact"] .main-column .block h2 {
+  border-bottom-color: rgba(47, 91, 95, 0.16);
+}
+
+.resume-page[data-template="compact"] .compact-footer .block {
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(47, 91, 95, 0.08);
+}
+
+.resume-page[data-template="compact"] .compact-footer .block:last-child {
+  border-bottom: 0;
+}
+
+.resume-page[data-template="compact"] .main-column .block {
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(47, 91, 95, 0.08);
+}
+
+.resume-page[data-template="compact"] .main-column .block:last-child {
+  border-bottom: 0;
+}
+
+@media (max-width: 760px) {
+  .resume-page[data-template="compact"] .compact-footer {
+    grid-template-columns: 1fr;
+  }
+}

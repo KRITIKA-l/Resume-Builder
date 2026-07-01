@@ -1,0 +1,43 @@
+.resume-page[data-template="executive"] {
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.08);
+  --paper: #fbfaf7;
+  --muted: #5e625f;
+  padding: 0.26in 0.34in 0.3in;
+}
+
+.resume-page[data-template="executive"] .header {
+  justify-items: start;
+  text-align: left;
+  padding: 0.08in 0.08in 0.14in;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.13), rgba(15, 118, 110, 0.03));
+}
+
+.resume-page[data-template="executive"] .header h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  text-transform: none;
+  letter-spacing: 0.03em;
+}
+
+.resume-page[data-template="executive"] .contact-list {
+  justify-content: flex-start;
+  border-bottom-color: rgba(15, 118, 110, 0.35);
+}
+
+.resume-page[data-template="executive"] .content-grid {
+  grid-template-columns: 31% 69%;
+  gap: 14px;
+}
+
+.resume-page[data-template="executive"] .block h2 {
+  color: #0f766e;
+  letter-spacing: 0.14em;
+}
+
+.resume-page[data-template="executive"] .skill-tag {
+  border-color: rgba(15, 118, 110, 0.26);
+  background: #fff;
+}
