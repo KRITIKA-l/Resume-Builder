@@ -27,4 +27,5 @@ No clutter. No templates overload. Just a focused resume-building experience.
 
 ---
 
+
 > “Your resume should showcase your work — not your struggle with formatting.”
