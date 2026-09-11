@@ -2,7 +2,6 @@ let projectsContainer = document.getElementById('projects');
 let educationContainer = document.getElementById('education');
 let skillsContainer = document.getElementById('skills');
 let experienceContainer = document.getElementById('experience');
-let certificationsContainer = document.getElementById('certifications');
 let contactList = document.getElementById('contact-list');
 const form = document.getElementById('resume-form');
 const resetButton = document.getElementById('reset-btn');
@@ -13,7 +12,6 @@ const templateStyleLink = document.getElementById('template-style');
 const templateBar = document.getElementById('template-bar');
 const themeBar = document.getElementById('theme-bar');
 const skillsForm = document.getElementById('skills-form');
-const certificationsForm = document.getElementById('certifications-form');
 const projectsForm = document.getElementById('projects-form');
 const experienceForm = document.getElementById('experience-form');
 const educationForm = document.getElementById('education-form');
@@ -38,22 +36,26 @@ const themePresets = {
   classic: [
     { key: 'classic-blue', label: 'Blue', vars: { accent: '#1f4c8f', accentSoft: 'rgba(31, 76, 143, 0.06)', paper: '#ffffff', muted: '#56606e' } },
     { key: 'classic-charcoal', label: 'Charcoal', vars: { accent: '#374151', accentSoft: 'rgba(55, 65, 81, 0.08)', paper: '#ffffff', muted: '#5b6472' } },
-    { key: 'classic-olive', label: 'Olive', vars: { accent: '#586b3c', accentSoft: 'rgba(88, 107, 60, 0.08)', paper: '#fbfbf8', muted: '#5e6656' } }
+    { key: 'classic-olive', label: 'Olive', vars: { accent: '#586b3c', accentSoft: 'rgba(88, 107, 60, 0.08)', paper: '#fbfbf8', muted: '#5e6656' } },
+    { key: 'classic-mono', label: 'Black & White', vars: { accent: '#000000', accentSoft: 'rgba(0, 0, 0, 0.06)', paper: '#ffffff', muted: '#3a3a3a' } }
   ],
   compact: [
     { key: 'compact-forest', label: 'Forest', vars: { accent: '#2f5b5f', accentSoft: 'rgba(47, 91, 95, 0.07)', paper: '#fcfcfb', muted: '#56606e' } },
     { key: 'compact-slate', label: 'Slate', vars: { accent: '#475569', accentSoft: 'rgba(71, 85, 105, 0.08)', paper: '#fbfcfd', muted: '#5c6778' } },
-    { key: 'compact-ink', label: 'Ink', vars: { accent: '#111827', accentSoft: 'rgba(17, 24, 39, 0.08)', paper: '#ffffff', muted: '#5e6671' } }
+    { key: 'compact-ink', label: 'Ink', vars: { accent: '#111827', accentSoft: 'rgba(17, 24, 39, 0.08)', paper: '#ffffff', muted: '#5e6671' } },
+    { key: 'compact-mono', label: 'Black & White', vars: { accent: '#000000', accentSoft: 'rgba(0, 0, 0, 0.06)', paper: '#ffffff', muted: '#3a3a3a' } }
   ],
   editorial: [
     { key: 'editorial-plum', label: 'Plum', vars: { accent: '#5d3fd3', accentSoft: 'rgba(93, 63, 211, 0.07)', paper: '#fffdf9', muted: '#625f7a' } },
     { key: 'editorial-ruby', label: 'Ruby', vars: { accent: '#9b2c2c', accentSoft: 'rgba(155, 44, 44, 0.08)', paper: '#fffdf8', muted: '#6d5a5a' } },
-    { key: 'editorial-teal', label: 'Teal', vars: { accent: '#0f766e', accentSoft: 'rgba(15, 118, 110, 0.08)', paper: '#fbfffe', muted: '#5d6867' } }
+    { key: 'editorial-teal', label: 'Teal', vars: { accent: '#0f766e', accentSoft: 'rgba(15, 118, 110, 0.08)', paper: '#fbfffe', muted: '#5d6867' } },
+    { key: 'editorial-mono', label: 'Black & White', vars: { accent: '#000000', accentSoft: 'rgba(0, 0, 0, 0.06)', paper: '#ffffff', muted: '#3a3a3a' } }
   ],
   executive: [
     { key: 'executive-teal', label: 'Teal', vars: { accent: '#0f766e', accentSoft: 'rgba(15, 118, 110, 0.08)', paper: '#fbfaf7', muted: '#5e625f' } },
     { key: 'executive-navy', label: 'Navy', vars: { accent: '#1f4c8f', accentSoft: 'rgba(31, 76, 143, 0.08)', paper: '#fbfbfc', muted: '#5c6470' } },
-    { key: 'executive-graphite', label: 'Graphite', vars: { accent: '#334155', accentSoft: 'rgba(51, 65, 85, 0.08)', paper: '#fcfcfd', muted: '#616775' } }
+    { key: 'executive-graphite', label: 'Graphite', vars: { accent: '#334155', accentSoft: 'rgba(51, 65, 85, 0.08)', paper: '#fcfcfd', muted: '#616775' } },
+    { key: 'executive-mono', label: 'Black & White', vars: { accent: '#000000', accentSoft: 'rgba(0, 0, 0, 0.06)', paper: '#ffffff', muted: '#3a3a3a' } }
   ]
 };
 
@@ -92,8 +94,14 @@ const initialState = () => ({
   skills: [
     { category: '', skills: [''] }
   ],
-  certifications: [
-    { title: '', url: '' }
+  training: [
+    { title: '', issuer: '', duration: '', url: '' }
+  ],
+  awards: [
+    { title: '', date: '' }
+  ],
+  extracurricular: [
+    { title: '', role: '', date: '' }
   ],
   projects: [
     {
@@ -126,7 +134,9 @@ function loadState() {
       education: Array.isArray(parsed.education) && parsed.education.length ? parsed.education : fallback.education,
       experience: Array.isArray(parsed.experience) && parsed.experience.length ? parsed.experience : fallback.experience,
       skills: Array.isArray(parsed.skills) && parsed.skills.length ? parsed.skills : fallback.skills,
-      certifications: Array.isArray(parsed.certifications) && parsed.certifications.length ? parsed.certifications : fallback.certifications,
+      training: Array.isArray(parsed.training) && parsed.training.length ? parsed.training : fallback.training,
+      awards: Array.isArray(parsed.awards) && parsed.awards.length ? parsed.awards : fallback.awards,
+      extracurricular: Array.isArray(parsed.extracurricular) && parsed.extracurricular.length ? parsed.extracurricular : fallback.extracurricular,
       projects: Array.isArray(parsed.projects) && parsed.projects.length ? parsed.projects : fallback.projects
     };
   } catch {
@@ -214,16 +224,12 @@ function renderEducation() {
     .map(
       (item) => `
         <div class="entry">
-          <h3>${item.degree}</h3>
-          <p>${item.institute}</p>
-          <div class="meta meta-with-icon">
-            ${item.duration ? `
-              <svg class="meta-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="${iconPaths.calendar}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-              <span>${item.duration}</span>
-            ` : ''}
-            ${item.duration && item.location ? '<span class="meta-separator">|</span>' : ''}
+          <div class="entry-header">
+            <h3>${item.institute}</h3>
+            ${item.duration ? `<span class="entry-date">${item.duration}</span>` : ''}
+          </div>
+          <p>${item.degree}</p>
+          <div class="meta">
             ${item.location ? `<span>${item.location}</span>` : ''}
           </div>
         </div>
@@ -238,10 +244,7 @@ function renderSkills() {
     .map(
       (group) => `
         <div class="skill-group">
-          <h3>${group.category}</h3>
-          <div class="skill-tags">
-            ${group.skills.filter(Boolean).map((skill) => `<span class="skill-tag">${skill}</span>`).join('')}
-          </div>
+          <strong>${group.category}:</strong> ${group.skills.filter(Boolean).join(', ')}
         </div>
       `
     )
@@ -260,9 +263,12 @@ function renderExperience() {
     .map(
       (item) => `
         <div class="entry">
-          <h3>${item.title}</h3>
-          <p>${item.company}</p>
-          <div class="meta">${item.duration}${item.duration && item.location ? ' | ' : ''}${item.location}</div>
+          <div class="entry-header">
+            <h3>${item.title}</h3>
+            ${item.duration ? `<span class="entry-date">${item.duration}</span>` : ''}
+          </div>
+          <p style="font-weight: 700;">${item.company}</p>
+          <div class="meta">${item.location ? `${item.location}` : ''}</div>
           <ul class="bullets">
             ${(item.bullets || []).filter(Boolean).map((point) => `<li>${point}</li>`).join('')}
           </ul>
@@ -272,14 +278,58 @@ function renderExperience() {
     .join('');
 }
 
-function renderCertifications() {
-  const items = state.certifications.filter((item) => item.title.trim());
-  certificationsContainer.innerHTML = items
+function renderTraining() {
+  const trainingContainer = document.getElementById('training');
+  if (!trainingContainer) return;
+  
+  const items = state.training.filter((item) => item.title.trim() || item.issuer.trim() || item.duration.trim());
+  const list = items
     .map((item) => {
       const url = safeUrl(item.url);
-      return `<li>${url ? `<a href="${url}" target="_blank" rel="noreferrer">${item.title}</a>` : item.title}</li>`;
+      return `
+        <li class="entry">
+          <div class="entry-header">
+            <h3>${url ? `<a href="${url}" target="_blank" rel="noreferrer">${item.title}</a>` : item.title} | ${item.issuer}</h3>
+            ${item.duration ? `<span class="entry-date">${item.duration}</span>` : ''}
+          </div>
+        </li>
+      `;
     })
     .join('');
+  trainingContainer.innerHTML = list ? `<ul class="entry-list">${list}</ul>` : '';
+}
+
+function renderAwards() {
+  const awardsContainer = document.getElementById('awards');
+  if (!awardsContainer) return;
+  
+  const items = state.awards.filter((item) => item.title.trim() || item.date.trim());
+  const list = items
+    .map((item) => `
+      <li class="entry">
+        <div class="entry-header">
+          <h3>${item.title}</h3>
+          ${item.date ? `<span class="entry-date">${item.date}</span>` : ''}
+        </div>
+      </li>
+    `)
+    .join('');
+  awardsContainer.innerHTML = list ? `<ul class="entry-list">${list}</ul>` : '';
+}
+
+function renderExtracurricular() {
+  const extracurricularContainer = document.getElementById('extracurricular');
+  if (!extracurricularContainer) return;
+  
+  const items = state.extracurricular.filter((item) => item.title.trim() || item.role.trim() || item.date.trim());
+  const list = items
+    .map((item) => `
+      <li class="entry">
+        <h3>${item.title}</h3>
+      </li>
+    `)
+    .join('');
+  extracurricularContainer.innerHTML = list ? `<ul class="entry-list">${list}</ul>` : '';
 }
 
 function renderProjects() {
@@ -329,11 +379,29 @@ function buildSkillsSection() {
   `;
 }
 
-function buildCertificationsSection() {
+function buildTrainingSection() {
   return `
     <section class="block">
-      <h2>Certifications</h2>
-      <ul id="certifications" class="bullets"></ul>
+      <h2>Training & Certifications</h2>
+      <div id="training"></div>
+    </section>
+  `;
+}
+
+function buildAwardsSection() {
+  return `
+    <section class="block">
+      <h2>Awards & Achievements</h2>
+      <div id="awards"></div>
+    </section>
+  `;
+}
+
+function buildExtracurricularSection() {
+  return `
+    <section class="block">
+      <h2>Extracurricular Activities & Leadership</h2>
+      <div id="extracurricular"></div>
     </section>
   `;
 }
@@ -341,7 +409,7 @@ function buildCertificationsSection() {
 function buildExperienceSection() {
   return `
     <section class="block">
-      <h2>Experience</h2>
+      <h2>Internships</h2>
       <div id="experience"></div>
     </section>
   `;
@@ -359,10 +427,13 @@ function buildProjectsSection() {
 function renderTemplateLayout() {
   if (!resumePage) return;
 
-  const layout = state.template;
+  const layout = templates.some((template) => template.key === state.template) ? state.template : 'classic';
   let markup = '';
 
   if (layout === 'classic') {
+    // Traditional single-column "Harvard style" resume: centered header,
+    // everything in one reading column. The most conservative, most
+    // ATS-safe format, common in law, finance, and academia.
     markup = `
       <header class="header">
         <div class="name-wrap"><h1 id="name"></h1></div>
@@ -370,13 +441,18 @@ function renderTemplateLayout() {
       </header>
       <section class="content-grid content-grid-classic">
         ${buildEducationSection()}
+        ${buildSkillsSection()}
         ${buildExperienceSection()}
         ${buildProjectsSection()}
-        ${buildSkillsSection()}
-        ${buildCertificationsSection()}
+        ${buildTrainingSection()}
+        ${buildExtracurricularSection()}
+        ${buildAwardsSection()}
       </section>
     `;
   } else if (layout === 'compact') {
+    // Two-column layout: main experience/projects column plus a
+    // multi-column footer band for the shorter list sections. Common
+    // "one-pager" style used for tech and general professional resumes.
     markup = `
       <header class="header">
         <div class="name-wrap"><h1 id="name"></h1></div>
@@ -390,29 +466,37 @@ function renderTemplateLayout() {
         <aside class="compact-footer">
           ${buildEducationSection()}
           ${buildSkillsSection()}
-          ${buildCertificationsSection()}
+          ${buildTrainingSection()}
+          ${buildExtracurricularSection()}
+          ${buildAwardsSection()}
         </aside>
       </section>
     `;
   } else if (layout === 'editorial') {
+    // Sidebar layout with a wide main column: common "modern creative"
+    // resume format used in design, marketing, and content roles.
     markup = `
       <header class="header">
         <div class="name-wrap"><h1 id="name"></h1></div>
         <ul class="contact-list" aria-label="Contact details" id="contact-list"></ul>
       </header>
       <section class="content-grid content-grid-editorial">
+        <aside class="sidebar">
+          ${buildEducationSection()}
+          ${buildSkillsSection()}
+          ${buildTrainingSection()}
+          ${buildExtracurricularSection()}
+          ${buildAwardsSection()}
+        </aside>
         <section class="main-column">
           ${buildExperienceSection()}
           ${buildProjectsSection()}
         </section>
-        <aside class="sidebar">
-          ${buildEducationSection()}
-          ${buildSkillsSection()}
-          ${buildCertificationsSection()}
-        </aside>
       </section>
     `;
   } else {
+    // Executive: banner header plus a narrow sidebar, wide main column.
+    // Bold, senior/management resume format.
     markup = `
       <header class="header">
         <div class="name-wrap"><h1 id="name"></h1></div>
@@ -422,24 +506,52 @@ function renderTemplateLayout() {
         <aside class="sidebar">
           ${buildEducationSection()}
           ${buildSkillsSection()}
-          ${buildCertificationsSection()}
+          ${buildTrainingSection()}
+          ${buildExtracurricularSection()}
         </aside>
         <section class="main-column">
           ${buildExperienceSection()}
           ${buildProjectsSection()}
+          ${buildAwardsSection()}
         </section>
       </section>
     `;
   }
-  resumePage.innerHTML = markup;
+
+  resumePage.innerHTML = `<div class="page-fit">${markup}</div>`;
 
   nameHeading = document.getElementById('name');
   contactList = document.getElementById('contact-list');
   educationContainer = document.getElementById('education');
   skillsContainer = document.getElementById('skills');
   experienceContainer = document.getElementById('experience');
-  certificationsContainer = document.getElementById('certifications');
   projectsContainer = document.getElementById('projects');
+}
+
+// Shrinks the resume content (via CSS zoom) so it always fits within a
+// single A4 page, instead of overflowing onto a second page. `zoom` is used
+// instead of `transform: scale()` because it reflows the actual layout at
+// the smaller size (like changing font-size), so text stays crisp instead
+// of being stretched/rasterized like a scaled image.
+function fitResumeToOnePage() {
+  if (!resumePage) return;
+  const pageFit = resumePage.querySelector('.page-fit');
+  if (!pageFit) return;
+
+  // Reset first so we measure the content's natural, unzoomed height.
+  pageFit.style.zoom = 1;
+
+  const pageStyles = getComputedStyle(resumePage);
+  const paddingTop = parseFloat(pageStyles.paddingTop) || 0;
+  const paddingBottom = parseFloat(pageStyles.paddingBottom) || 0;
+  const availableHeight = resumePage.clientHeight - paddingTop - paddingBottom;
+  const contentHeight = pageFit.scrollHeight;
+
+  if (availableHeight > 0 && contentHeight > availableHeight) {
+    const MIN_ZOOM = 0.6;
+    const zoom = Math.max(availableHeight / contentHeight, MIN_ZOOM);
+    pageFit.style.zoom = zoom;
+  }
 }
 
 function renderTemplateButtons() {
@@ -549,18 +661,6 @@ function renderRepeatableForms() {
     )
     .join('');
 
-  certificationsForm.innerHTML = state.certifications
-    .map(
-      (item, index) => `
-        <div class="repeat-card repeatable-item">
-          <button type="button" class="remove-btn" data-remove="certificate" data-index="${index}">Remove</button>
-          <label>Certificate title<input data-list="certifications" data-index="${index}" data-field="title" value="${item.title}" placeholder="Certificate name"></label>
-          <label>Certificate URL (optional)<input data-list="certifications" data-index="${index}" data-field="url" value="${item.url}" placeholder="https://..."></label>
-        </div>
-      `
-    )
-    .join('');
-
   projectsForm.innerHTML = state.projects
     .map(
       (item, index) => `
@@ -599,6 +699,64 @@ function renderRepeatableForms() {
       `
     )
     .join('');
+
+  const trainingForm = document.getElementById('training-form');
+  if (trainingForm) {
+    trainingForm.innerHTML = state.training
+      .map(
+        (item, index) => `
+          <div class="repeat-card repeatable-item">
+            <button type="button" class="remove-btn" data-remove="training" data-index="${index}">Remove</button>
+            <div class="grid-2">
+              <label>Training / Certificate<input data-list="training" data-index="${index}" data-field="title" value="${item.title}" placeholder="Training or certificate title"></label>
+              <label>Issuer<input data-list="training" data-index="${index}" data-field="issuer" value="${item.issuer}" placeholder="Organization / Platform"></label>
+            </div>
+            <div class="grid-2">
+              <label>Duration / Date (optional)<input data-list="training" data-index="${index}" data-field="duration" value="${item.duration}" placeholder="Start - End"></label>
+              <label>URL (optional)<input data-list="training" data-index="${index}" data-field="url" value="${item.url}" placeholder="https://..."></label>
+            </div>
+          </div>
+        `
+      )
+      .join('');
+  }
+
+  const awardsForm = document.getElementById('awards-form');
+  if (awardsForm) {
+    awardsForm.innerHTML = state.awards
+      .map(
+        (item, index) => `
+          <div class="repeat-card repeatable-item repeat-card-compact">
+            <button type="button" class="remove-btn" data-remove="award" data-index="${index}">Remove</button>
+            <div class="grid-2">
+              <label>Award / Achievement<input data-list="awards" data-index="${index}" data-field="title" value="${item.title}" placeholder="Award name"></label>
+              <label>Date<input data-list="awards" data-index="${index}" data-field="date" value="${item.date}" placeholder="Month Year"></label>
+            </div>
+          </div>
+        `
+      )
+      .join('');
+  }
+
+  const extracurricularForm = document.getElementById('extracurricular-form');
+  if (extracurricularForm) {
+    extracurricularForm.innerHTML = state.extracurricular
+      .map(
+        (item, index) => `
+          <div class="repeat-card repeatable-item repeat-card-compact">
+            <button type="button" class="remove-btn" data-remove="extracurricular" data-index="${index}">Remove</button>
+            <div class="grid-2">
+              <label>Activity / Leadership<input data-list="extracurricular" data-index="${index}" data-field="title" value="${item.title}" placeholder="Activity name"></label>
+              <label>Role<input data-list="extracurricular" data-index="${index}" data-field="role" value="${item.role}" placeholder="Role / Position"></label>
+            </div>
+            <div class="grid-2">
+              <label>Date<input data-list="extracurricular" data-index="${index}" data-field="date" value="${item.date}" placeholder="Start - End"></label>
+            </div>
+          </div>
+        `
+      )
+      .join('');
+  }
 }
 
 function syncFixedFields() {
@@ -653,11 +811,14 @@ function syncFromForm() {
   renderEducation();
   renderSkills();
   renderExperience();
-  renderCertifications();
+  renderTraining();
+  renderAwards();
+  renderExtracurricular();
   renderProjects();
   renderTemplateButtons();
   renderThemeButtons();
   saveState();
+  fitResumeToOnePage();
 }
 
 function addItem(type) {
@@ -665,8 +826,16 @@ function addItem(type) {
     state.skills.push({ category: '', skills: [''] });
   }
 
-  if (type === 'certificate') {
-    state.certifications.push({ title: '', url: '' });
+  if (type === 'training') {
+    state.training.push({ title: '', issuer: '', duration: '', url: '' });
+  }
+
+  if (type === 'award') {
+    state.awards.push({ title: '', date: '' });
+  }
+
+  if (type === 'extracurricular') {
+    state.extracurricular.push({ title: '', role: '', date: '' });
   }
 
   if (type === 'project') {
@@ -688,8 +857,16 @@ function removeItem(type, index) {
     state.skills.splice(index, 1);
   }
 
-  if (type === 'certificate' && state.certifications.length > 1) {
-    state.certifications.splice(index, 1);
+  if (type === 'training' && state.training.length > 1) {
+    state.training.splice(index, 1);
+  }
+
+  if (type === 'award' && state.awards.length > 1) {
+    state.awards.splice(index, 1);
+  }
+
+  if (type === 'extracurricular' && state.extracurricular.length > 1) {
+    state.extracurricular.splice(index, 1);
   }
 
   if (type === 'project' && state.projects.length > 1) {
@@ -720,9 +897,12 @@ form.addEventListener('input', (event) => {
   renderEducation();
   renderSkills();
   renderExperience();
-  renderCertifications();
+  renderTraining();
+  renderAwards();
+  renderExtracurricular();
   renderProjects();
   saveState();
+  fitResumeToOnePage();
 });
 
 form.addEventListener('click', (event) => {
@@ -777,7 +957,12 @@ resetButton.addEventListener('click', () => {
 });
 
 printButton.addEventListener('click', () => {
+  fitResumeToOnePage();
   window.print();
+});
+
+window.addEventListener('resize', () => {
+  fitResumeToOnePage();
 });
 
 renderRepeatableForms();

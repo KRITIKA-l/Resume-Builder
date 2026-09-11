@@ -1,43 +1,81 @@
+/* EXECUTIVE — bold corporate two-column layout: banner header, narrow
+   sidebar, wide main column. Senior / management resume format. */
 .resume-page[data-template="executive"] {
   --accent: #0f766e;
   --accent-soft: rgba(15, 118, 110, 0.08);
   --paper: #fbfaf7;
   --muted: #5e625f;
   padding: 0.26in 0.34in 0.3in;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
 .resume-page[data-template="executive"] .header {
-  justify-items: start;
   text-align: left;
-  padding: 0.08in 0.08in 0.14in;
-  margin-bottom: 10px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(15, 118, 110, 0.13), rgba(15, 118, 110, 0.03));
+  padding: 0.1in 0.14in;
+  margin-bottom: 14px;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  border-bottom: 0;
+  border-left: 5px solid var(--accent);
 }
 
 .resume-page[data-template="executive"] .header h1 {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 26px;
+  font-size: 25px;
+  font-weight: 700;
   text-transform: none;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 
 .resume-page[data-template="executive"] .contact-list {
   justify-content: flex-start;
-  border-bottom-color: rgba(15, 118, 110, 0.35);
+  border-bottom: 0;
 }
 
-.resume-page[data-template="executive"] .content-grid {
-  grid-template-columns: 31% 69%;
+.resume-page[data-template="executive"] .content-grid-executive {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 18px;
+  align-items: start;
+}
+
+.resume-page[data-template="executive"] .sidebar {
   gap: 14px;
 }
 
-.resume-page[data-template="executive"] .block h2 {
-  color: #0f766e;
-  letter-spacing: 0.14em;
+.resume-page[data-template="executive"] .main-column {
+  gap: 14px;
 }
 
-.resume-page[data-template="executive"] .skill-tag {
-  border-color: rgba(15, 118, 110, 0.26);
-  background: #fff;
+.resume-page[data-template="executive"] .block {
+  margin-bottom: 0;
+}
+
+.resume-page[data-template="executive"] .block h2 {
+  display: inline-block;
+  width: auto;
+  color: var(--accent);
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  border-bottom: 3px solid var(--accent);
+  padding: 0 2px 5px;
+  margin-bottom: 6px;
+}
+
+.resume-page[data-template="executive"] .entry,
+.resume-page[data-template="executive"] .project-item {
+  padding-left: 10px;
+  border-left: 2px solid var(--accent-soft);
+}
+
+.resume-page[data-template="executive"] .entry h3,
+.resume-page[data-template="executive"] .entry-header h3,
+.resume-page[data-template="executive"] .project-item h3 {
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .resume-page[data-template="executive"] .content-grid-executive {
+    grid-template-columns: 1fr;
+  }
 }

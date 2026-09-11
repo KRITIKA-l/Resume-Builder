@@ -1,91 +1,90 @@
+/* EDITORIAL — magazine-style two-column layout: narrow sidebar (education,
+   skills, training, awards, extracurricular) beside a wide main column
+   (experience, projects). Common "modern creative" resume format. */
 .resume-page[data-template="editorial"] {
   --accent: #5d3fd3;
   --accent-soft: rgba(93, 63, 211, 0.07);
   --paper: #fffdf9;
   --muted: #625f7a;
   padding: 0.3in 0.34in;
+  border-top: 5px solid var(--accent);
 }
 
 .resume-page[data-template="editorial"] .header {
-  justify-items: start;
   text-align: left;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  align-items: start;
-  gap: 10px;
   padding-bottom: 16px;
-  margin-bottom: 14px;
-  border-bottom: 1px solid rgba(93, 63, 211, 0.18);
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--accent-soft);
 }
 
 .resume-page[data-template="editorial"] .header h1 {
   font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
   text-transform: none;
   letter-spacing: 0.01em;
-  font-size: 29px;
+  font-size: 30px;
+  font-weight: 400;
 }
 
 .resume-page[data-template="editorial"] .contact-list {
   justify-content: flex-start;
   border-bottom: 0;
   padding-bottom: 0;
-  margin-bottom: 0;
-  align-self: start;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
 }
 
-.resume-page[data-template="editorial"] .content-grid {
-  display: block;
+.resume-page[data-template="editorial"] .content-grid-editorial {
+  display: grid;
+  grid-template-columns: 34% 66%;
+  gap: 20px;
+  align-items: start;
+}
+
+.resume-page[data-template="editorial"] .sidebar {
+  gap: 16px;
+}
+
+.resume-page[data-template="editorial"] .main-column {
+  gap: 16px;
+}
+
+.resume-page[data-template="editorial"] .block {
+  margin-bottom: 0;
 }
 
 .resume-page[data-template="editorial"] .block h2 {
-  letter-spacing: 0.08em;
-  text-transform: none;
+  border-bottom: 0;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--accent);
 }
 
-.resume-page[data-template="editorial"] .skill-tag {
-  border-color: rgba(93, 63, 211, 0.22);
-  background: rgba(93, 63, 211, 0.05);
-  border-radius: 6px;
+.resume-page[data-template="editorial"] .entry-date,
+.resume-page[data-template="editorial"] .meta,
+.resume-page[data-template="editorial"] .project-tech {
+  font-style: italic;
 }
 
 .resume-page[data-template="editorial"] .project-item {
   padding: 12px 14px;
-  border-left: 3px solid rgba(93, 63, 211, 0.18);
+  border-left: 3px solid var(--accent);
   margin-bottom: 8px;
-  background: linear-gradient(90deg, rgba(93, 63, 211, 0.05), transparent 60%);
-  border-radius: 12px;
+  background: var(--accent-soft);
+  border-radius: 0 10px 10px 0;
 }
 
 .resume-page[data-template="editorial"] .entry {
-  padding: 8px 0 8px 12px;
-  border-left: 2px solid rgba(93, 63, 211, 0.14);
-  margin-bottom: 6px;
+  padding: 2px 0 2px 12px;
+  border-left: 2px solid var(--accent-soft);
+  margin-bottom: 8px;
 }
 
-.resume-page[data-template="editorial"] .sidebar {
-  display: grid;
-  grid-template-columns: 38% 62%;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.resume-page[data-template="editorial"] .main-column {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
-.resume-page[data-template="editorial"] .sidebar .block,
-.resume-page[data-template="editorial"] .main-column .block {
-  padding: 0;
-}
-
-.resume-page[data-template="editorial"] .sidebar .block:nth-child(1) {
-  grid-row: 1 / span 2;
-}
-
-.resume-page[data-template="editorial"] .sidebar .block:nth-child(2) {
-  align-self: start;
+@media (max-width: 760px) {
+  .resume-page[data-template="editorial"] .content-grid-editorial {
+    grid-template-columns: 1fr;
+  }
 }

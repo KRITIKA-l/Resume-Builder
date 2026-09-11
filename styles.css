@@ -236,7 +236,7 @@ body {
 
 .resume-page {
   width: 100%;
-  min-height: 11.69in;
+  height: 11.69in;
   margin: 0;
   background: var(--paper);
   padding: 0.42in 0.5in 0.42in;
@@ -246,22 +246,28 @@ body {
   overflow: hidden;
 }
 
+.page-fit {
+  width: 100%;
+}
+
+/* ATS-friendly header: a single left-aligned column (name, then contact
+   details) reads correctly top-to-bottom regardless of parser. */
 .header {
-  display: grid;
-  justify-items: center;
-  gap: 4px;
+  display: block;
+  text-align: left;
   padding-top: 0;
-  margin-bottom: 7px;
-  text-align: center;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #6f7f93;
 }
 
 .name-wrap {
-  max-width: 6.6in;
+  max-width: 100%;
 }
 
 .header h1 {
   margin: 0;
-  font-size: 27px;
+  font-size: 26px;
   letter-spacing: 0.015em;
   text-transform: uppercase;
 }
@@ -269,16 +275,14 @@ body {
 .contact-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 4px 10px;
   padding: 0;
-  margin: 0 0 6px;
+  margin: 6px 0 0;
   list-style: none;
   font-size: 11px;
   color: var(--ink);
   width: 100%;
-  padding-bottom: 7px;
-  border-bottom: 2px solid #6f7f93;
 }
 
 .contact-list li {
@@ -301,8 +305,7 @@ body {
   text-decoration: underline;
 }
 
-.contact-list a,
-.certifications a {
+.contact-list a {
   word-break: break-word;
 }
 
@@ -319,17 +322,28 @@ body {
   }
 }
 
+/* Base content flow: a plain single column. Templates with a sidebar
+   layout (compact, editorial, executive) override this with a grid. */
 .content-grid {
-  display: grid;
-  grid-template-columns: 35% 65%;
-  gap: 12px;
-  align-items: start;
+  display: block;
   margin-top: 8px;
 }
 
+.sidebar,
+.main-column {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.compact-footer {
+  display: grid;
+  gap: 10px;
+}
+
 .block {
-  margin-bottom: 5px;
-  padding: 0 0 0 8px;
+  margin-bottom: 10px;
+  padding: 0;
   border-left: 0;
 }
 
@@ -345,7 +359,7 @@ body {
   color: var(--accent);
 }
 
-.main-column .block:last-child {
+.content-grid .block:last-child {
   margin-bottom: 0;
 }
 
@@ -356,16 +370,56 @@ body {
   background: transparent;
 }
 
-.entry h3,
-.skill-group h3 {
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.entry-header h3 {
+  margin: 0 0 2px;
+  font-size: 12.4px;
+  line-height: 1.25;
+  font-weight: 700;
+  flex: 1;
+}
+
+.entry-date {
+  font-size: 11px;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.entry h3 {
   margin: 0 0 2px;
   font-size: 12.4px;
   line-height: 1.25;
   font-weight: 700;
 }
 
+.entry h3 a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.entry-list {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.entry-list .entry {
+  padding-left: 2px;
+}
+
+/* Training, Extracurricular & Awards: titles stay regular weight (not bold) */
+#training h3,
+#awards h3,
+#extracurricular h3 {
+  font-weight: 400;
+}
+
 .entry p,
-.skill-group p,
 .meta,
 .bullets {
   margin: 0;
@@ -374,7 +428,6 @@ body {
 }
 
 .meta {
-  color: var(--muted);
   margin-top: 0;
 }
 
@@ -408,40 +461,13 @@ body {
   margin-bottom: 1px;
 }
 
-.sidebar .meta {
-  white-space: nowrap;
-  font-size: 10.4px;
-}
-
 .skill-group {
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   padding: 0;
   background: transparent;
   border: 0;
-}
-
-.skill-group h3 {
-  margin-bottom: 4px;
-  padding-left: 2px;
-}
-
-.skill-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  padding-left: 2px;
-}
-
-.skill-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 11px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 999px;
-  background: #fff;
-  font-size: 10.2px;
-  line-height: 1.2;
-  color: #2b2f38;
+  font-size: 10.9px;
+  line-height: 1.4;
 }
 
 .bullets {
@@ -463,6 +489,11 @@ body {
   padding: 0;
   border: 0;
   background: transparent;
+  margin-bottom: 10px;
+}
+
+.projects .project-item:last-child {
+  margin-bottom: 0;
 }
 
 .project-item h3 {
@@ -473,7 +504,7 @@ body {
 .project-tech {
   font-style: italic;
   font-size: 10.8px;
-  color: var(--muted);
+  color: var(--ink);
   margin-top: 0;
   margin-bottom: 4px;
 }
@@ -492,24 +523,6 @@ body {
 }
 
 .project-links a:hover {
-  text-decoration: underline;
-}
-
-#certifications {
-  padding-left: 16px;
-  margin-top: 2px;
-}
-
-#certifications li {
-  margin-bottom: 2px;
-}
-
-#certifications a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-#certifications a:hover {
   text-decoration: underline;
 }
 
@@ -544,11 +557,12 @@ body {
 
   .resume-page {
     width: auto;
-    min-height: auto;
+    height: 11.69in;
     margin: 0;
     padding: 0.5in 0.55in 0.5in;
     box-shadow: none;
     border: none;
+    overflow: hidden;
   }
 
   .contact-list a,
@@ -589,20 +603,8 @@ body {
     padding: 0.34in 0.26in 0.34in;
   }
 
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .block {
-    padding-left: 0;
-  }
-
   .header h1 {
     font-size: 25px;
-  }
-
-  .contact-list {
-    justify-content: center;
   }
 
   .panel-head-row {
