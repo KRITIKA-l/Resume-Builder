@@ -10,13 +10,15 @@
 }
 
 .resume-page[data-template="executive"] .header {
-  text-align: left;
-  padding: 0.1in 0.14in;
-  margin-bottom: 14px;
-  border-radius: 4px;
-  background: var(--accent-soft);
-  border-bottom: 0;
-  border-left: 5px solid var(--accent);
+  text-align: center;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 3px solid var(--accent);
+}
+
+.resume-page[data-template="executive"] .name-wrap {
+  max-width: 6.6in;
+  margin: 0 auto;
 }
 
 .resume-page[data-template="executive"] .header h1 {
@@ -28,23 +30,36 @@
 }
 
 .resume-page[data-template="executive"] .contact-list {
-  justify-content: flex-start;
+  justify-content: center;
   border-bottom: 0;
 }
 
 .resume-page[data-template="executive"] .content-grid-executive {
   display: grid;
-  grid-template-columns: 30% 70%;
-  gap: 18px;
+  grid-template-columns: minmax(0, 26fr) minmax(0, 74fr);
+  gap: 12px;
   align-items: start;
 }
 
 .resume-page[data-template="executive"] .sidebar {
-  gap: 14px;
+  gap: 10px;
+}
+
+/* The sidebar is intentionally narrow. Keep dates beneath their titles so
+   a long institution name or date cannot spill into the main column. */
+.resume-page[data-template="executive"] .sidebar .entry-header {
+  display: block;
+}
+
+.resume-page[data-template="executive"] .sidebar .entry-date {
+  display: block;
+  margin-top: 2px;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .resume-page[data-template="executive"] .main-column {
-  gap: 14px;
+  gap: 10px;
 }
 
 .resume-page[data-template="executive"] .block {
@@ -52,25 +67,33 @@
 }
 
 .resume-page[data-template="executive"] .block h2 {
-  display: inline-block;
-  width: auto;
+  display: block;
+  width: 100%;
   color: var(--accent);
-  letter-spacing: 0.16em;
-  font-size: 12px;
-  border-bottom: 3px solid var(--accent);
-  padding: 0 2px 5px;
-  margin-bottom: 6px;
+  letter-spacing: 0.14em;
+  font-size: 12.6px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--accent-soft);
+  padding: 0 0 5px;
+  margin-bottom: 5px;
 }
 
 .resume-page[data-template="executive"] .entry,
 .resume-page[data-template="executive"] .project-item {
-  padding-left: 10px;
-  border-left: 2px solid var(--accent-soft);
+  padding-left: 0;
+  border-left: 0;
+  margin-bottom: 3px;
+}
+
+.resume-page[data-template="executive"] .entry:last-child,
+.resume-page[data-template="executive"] .project-item:last-child {
+  margin-bottom: 0;
 }
 
 .resume-page[data-template="executive"] .entry h3,
 .resume-page[data-template="executive"] .entry-header h3,
 .resume-page[data-template="executive"] .project-item h3 {
+  font-size: 12.6px;
   font-weight: 800;
 }
 

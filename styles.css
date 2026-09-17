@@ -256,8 +256,8 @@ body {
   display: block;
   text-align: left;
   padding-top: 0;
-  padding-bottom: 8px;
-  margin-bottom: 10px;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
   border-bottom: 2px solid #6f7f93;
 }
 
@@ -280,7 +280,7 @@ body {
   padding: 0;
   margin: 6px 0 0;
   list-style: none;
-  font-size: 11px;
+  font-size: 11.8px;
   color: var(--ink);
   width: 100%;
 }
@@ -326,7 +326,7 @@ body {
    layout (compact, editorial, executive) override this with a grid. */
 .content-grid {
   display: block;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .sidebar,
@@ -334,6 +334,11 @@ body {
   display: grid;
   gap: 10px;
   align-content: start;
+  /* Grid items default to a min-width equal to their longest unbroken
+     content (a long link, company name, etc.). Without this, that content
+     refuses to shrink to the track's width and spills into the next
+     column, which reads as the sidebar/main-column "overlapping". */
+  min-width: 0;
 }
 
 .compact-footer {
@@ -342,7 +347,7 @@ body {
 }
 
 .block {
-  margin-bottom: 10px;
+  margin-bottom: 7px;
   padding: 0;
   border-left: 0;
 }
@@ -352,7 +357,7 @@ body {
   margin: 0 0 2px;
   padding-bottom: 2px;
   border-bottom: 1px solid var(--rule-strong);
-  font-size: 12.6px;
+  font-size: 13.4px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -364,7 +369,7 @@ body {
 }
 
 .entry {
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -379,21 +384,23 @@ body {
 
 .entry-header h3 {
   margin: 0 0 2px;
-  font-size: 12.4px;
+  font-size: 13.2px;
   line-height: 1.25;
   font-weight: 700;
   flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .entry-date {
-  font-size: 11px;
+  font-size: 11.6px;
   white-space: nowrap;
   font-weight: 700;
 }
 
 .entry h3 {
   margin: 0 0 2px;
-  font-size: 12.4px;
+  font-size: 13.2px;
   line-height: 1.25;
   font-weight: 700;
 }
@@ -423,8 +430,8 @@ body {
 .meta,
 .bullets {
   margin: 0;
-  font-size: 10.9px;
-  line-height: 1.28;
+  font-size: 12px;
+  line-height: 1.24;
 }
 
 .meta {
@@ -450,7 +457,7 @@ body {
 }
 
 #education .entry {
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 #education .entry h3 {
@@ -462,21 +469,22 @@ body {
 }
 
 .skill-group {
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   padding: 0;
   background: transparent;
   border: 0;
-  font-size: 10.9px;
+  font-size: 12px;
   line-height: 1.4;
+  overflow-wrap: break-word;
 }
 
 .bullets {
   padding-left: 16px;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .bullets li {
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .projects {
@@ -489,7 +497,7 @@ body {
   padding: 0;
   border: 0;
   background: transparent;
-  margin-bottom: 10px;
+  margin-bottom: 7px;
 }
 
 .projects .project-item:last-child {
@@ -499,21 +507,22 @@ body {
 .project-item h3 {
   margin: 0;
   font-weight: 700;
+  font-size: 13.2px;
 }
 
 .project-tech {
   font-style: italic;
-  font-size: 10.8px;
+  font-size: 11.8px;
   color: var(--ink);
   margin-top: 0;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .project-links {
   display: inline-flex;
   gap: 8px;
   margin-top: 0;
-  font-size: 10.8px;
+  font-size: 11.8px;
 }
 
 .project-links a {

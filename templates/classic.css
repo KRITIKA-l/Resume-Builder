@@ -4,14 +4,14 @@
   --accent-soft: rgba(31, 76, 143, 0.06);
   --paper: #ffffff;
   --muted: #56606e;
-  padding: 0.34in 0.42in 0.34in;
+  padding: 0.28in 0.38in 0.3in;
   font-family: Georgia, "Times New Roman", serif;
 }
 
 .resume-page[data-template="classic"] .header {
   text-align: center;
-  padding-bottom: 10px;
-  margin-bottom: 14px;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
   border-bottom: 3px double var(--accent);
 }
 
@@ -36,6 +36,7 @@
 }
 
 .resume-page[data-template="classic"] .block h2 {
+  font-family: Georgia, "Times New Roman", serif;
   font-variant: small-caps;
   font-weight: 700;
   text-transform: none;
@@ -49,7 +50,7 @@
 .resume-page[data-template="classic"] .entry-header h3,
 .resume-page[data-template="classic"] .project-item h3 {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 12.6px;
+  font-size: 13.4px;
 }
 
 .resume-page[data-template="classic"] .entry p,
@@ -62,4 +63,69 @@
 .resume-page[data-template="classic"] .project-item {
   padding-left: 10px;
   border-left: 2px solid var(--accent-soft);
+}
+
+/* Classic is the one template that stacks all 7 sections in a single
+   column (the others split into two columns), so it runs out of vertical
+   room first. Trim the whitespace between sections/entries rather than
+   the type size, so dense resumes still fit at full, readable font size. */
+.resume-page[data-template="classic"] .content-grid {
+  margin-top: 4px;
+}
+
+.resume-page[data-template="classic"] .block {
+  margin-bottom: 5px;
+}
+
+.resume-page[data-template="classic"] .block h2 {
+  margin-bottom: 1px;
+  padding-bottom: 2px;
+}
+
+.resume-page[data-template="classic"] .entry {
+  margin-bottom: 2px;
+}
+
+.resume-page[data-template="classic"] .project-item {
+  margin-bottom: 5px;
+}
+
+/* Applied only when Classic needs to make room for a one-page resume.
+   This recovers vertical space through spacing, not smaller text. */
+.resume-page[data-template="classic"][data-density="tight"] {
+  padding-top: 0.2in;
+  padding-bottom: 0.2in;
+}
+
+.resume-page[data-template="classic"][data-density="tight"] .header {
+  padding-bottom: 3px;
+  margin-bottom: 4px;
+}
+
+.resume-page[data-template="classic"][data-density="tight"] .contact-list {
+  margin-top: 4px;
+}
+
+.resume-page[data-template="classic"][data-density="tight"] .block {
+  margin-bottom: 3px;
+}
+
+.resume-page[data-template="classic"][data-density="tight"] .block h2 {
+  margin-bottom: 0;
+  padding-bottom: 1px;
+}
+
+.resume-page[data-template="classic"][data-density="tight"] .entry,
+.resume-page[data-template="classic"][data-density="tight"] .project-item {
+  margin-bottom: 1px;
+}
+
+.resume-page[data-template="classic"][data-density="tight"] .entry p,
+.resume-page[data-template="classic"][data-density="tight"] .meta,
+.resume-page[data-template="classic"][data-density="tight"] .bullets {
+  line-height: 1.16;
+}
+
+.resume-page[data-template="classic"][data-density="tight"] .bullets {
+  margin-top: 1px;
 }

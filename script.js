@@ -507,12 +507,12 @@ function renderTemplateLayout() {
           ${buildEducationSection()}
           ${buildSkillsSection()}
           ${buildTrainingSection()}
-          ${buildExtracurricularSection()}
         </aside>
         <section class="main-column">
           ${buildExperienceSection()}
           ${buildProjectsSection()}
           ${buildAwardsSection()}
+          ${buildExtracurricularSection()}
         </section>
       </section>
     `;
@@ -540,18 +540,42 @@ function fitResumeToOnePage() {
 
   // Reset first so we measure the content's natural, unzoomed height.
   pageFit.style.zoom = 1;
+  delete resumePage.dataset.density;
 
   const pageStyles = getComputedStyle(resumePage);
   const paddingTop = parseFloat(pageStyles.paddingTop) || 0;
   const paddingBottom = parseFloat(pageStyles.paddingBottom) || 0;
-  const availableHeight = resumePage.clientHeight - paddingTop - paddingBottom;
-  const contentHeight = pageFit.scrollHeight;
+  let availableHeight = resumePage.clientHeight - paddingTop - paddingBottom;
+  let contentHeight = pageFit.scrollHeight;
+
+  // Classic keeps every section in one column. Tighten only its whitespace
+  // first, so normal full resumes retain readable text before zoom is used.
+  if (state.template === 'classic' && contentHeight > availableHeight) {
+    resumePage.dataset.density = 'tight';
+    const tightPageStyles = getComputedStyle(resumePage);
+    const tightPaddingTop = parseFloat(tightPageStyles.paddingTop) || 0;
+    const tightPaddingBottom = parseFloat(tightPageStyles.paddingBottom) || 0;
+    availableHeight = resumePage.clientHeight - tightPaddingTop - tightPaddingBottom;
+    contentHeight = pageFit.scrollHeight;
+  }
 
   if (availableHeight > 0 && contentHeight > availableHeight) {
-    const MIN_ZOOM = 0.6;
+    // Floor kept high enough that text stays legible even on a packed
+    // resume — base font sizes were raised for print legibility and
+    // spacing trimmed sitewide, so the zoom rarely needs to drop this far.
+    const MIN_ZOOM = 0.88;
     const zoom = Math.max(availableHeight / contentHeight, MIN_ZOOM);
     pageFit.style.zoom = zoom;
   }
+}
+
+// A saved template can replace the initial Classic stylesheet during startup.
+// Refit after that stylesheet is applied so a refresh cannot leave the page
+// measured with one template and displayed with another.
+if (templateStyleLink) {
+  templateStyleLink.addEventListener('load', () => {
+    requestAnimationFrame(fitResumeToOnePage);
+  });
 }
 
 function renderTemplateButtons() {
@@ -621,7 +645,10 @@ function applyTemplate() {
   resumePage.dataset.template = templateKey;
 
   if (templateStyleLink) {
-    templateStyleLink.href = `templates/${templateKey}.css`;
+    const templateHref = `templates/${templateKey}.css`;
+    if (!templateStyleLink.getAttribute('href')?.endsWith(templateHref)) {
+      templateStyleLink.href = templateHref;
+    }
   }
 
   renderThemeButtons();
@@ -902,7 +929,8 @@ form.addEventListener('input', (event) => {
   renderExtracurricular();
   renderProjects();
   saveState();
-  fitResumeToOnePage();
+  // Keep the live preview's scale stable while the user types. The fitting
+  // pass still runs for Generate, template changes, resize, and print.
 });
 
 form.addEventListener('click', (event) => {
@@ -957,8 +985,23 @@ resetButton.addEventListener('click', () => {
 });
 
 printButton.addEventListener('click', () => {
-  fitResumeToOnePage();
   window.print();
+});
+
+// The on-screen preview column is narrower than a real printed A4 page, so
+// text wraps onto more lines there than it will on paper. Computing the fit
+// zoom against that narrow on-screen width (as a click handler running
+// before window.print() has to) produces a zoom that doesn't match how the
+// content actually lays out once printed. beforeprint fires after the
+// browser has already switched to the print stylesheet/page geometry, so
+// recomputing here measures the resume at its true print width and keeps
+// the PDF's proportions matching what's shown in the preview.
+window.addEventListener('beforeprint', () => {
+  fitResumeToOnePage();
+});
+
+window.addEventListener('afterprint', () => {
+  fitResumeToOnePage();
 });
 
 window.addEventListener('resize', () => {
