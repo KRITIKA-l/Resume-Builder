@@ -468,6 +468,24 @@ body {
   margin-bottom: 1px;
 }
 
+/* One row per degree/class under a shared institute heading, with the
+   date pinned to the right of that specific degree's line. */
+.edu-degree-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-bottom: 1px;
+}
+
+.edu-degree-row .edu-degree {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.24;
+}
+
 .skill-group {
   margin-bottom: 3px;
   padding: 0;

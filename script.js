@@ -220,21 +220,50 @@ function renderContact() {
 
 function renderEducation() {
   const items = state.education.filter((item) => item.degree || item.institute || item.duration || item.location);
-  educationContainer.innerHTML = items
-    .map(
-      (item) => `
+
+  // Group consecutive/duplicate entries that share the same institute (matched
+  // case-insensitively, ignoring surrounding whitespace) so multiple degrees
+  // from one school render as one institute block with a date per degree,
+  // instead of repeating the institute name for each degree.
+  const groups = [];
+  const groupIndexByInstitute = new Map();
+
+  items.forEach((item) => {
+    const key = item.institute.trim().toLowerCase();
+    if (key && groupIndexByInstitute.has(key)) {
+      groups[groupIndexByInstitute.get(key)].entries.push(item);
+      return;
+    }
+
+    groups.push({ institute: item.institute, location: item.location, entries: [item] });
+    if (key) groupIndexByInstitute.set(key, groups.length - 1);
+  });
+
+  educationContainer.innerHTML = groups
+    .map((group) => {
+      const degreeRows = group.entries
+        .map(
+          (entry) => `
+            <div class="edu-degree-row">
+              <span class="edu-degree">${entry.degree}</span>
+              ${entry.duration ? `<span class="entry-date">${entry.duration}</span>` : ''}
+            </div>
+          `
+        )
+        .join('');
+
+      return `
         <div class="entry">
           <div class="entry-header">
-            <h3>${item.institute}</h3>
-            ${item.duration ? `<span class="entry-date">${item.duration}</span>` : ''}
+            <h3>${group.institute}</h3>
           </div>
-          <p>${item.degree}</p>
+          ${degreeRows}
           <div class="meta">
-            ${item.location ? `<span>${item.location}</span>` : ''}
+            ${group.location ? `<span>${group.location}</span>` : ''}
           </div>
         </div>
-      `
-    )
+      `;
+    })
     .join('');
 }
 
@@ -445,8 +474,8 @@ function renderTemplateLayout() {
         ${buildExperienceSection()}
         ${buildProjectsSection()}
         ${buildTrainingSection()}
-        ${buildExtracurricularSection()}
         ${buildAwardsSection()}
+        ${buildExtracurricularSection()}
       </section>
     `;
   } else if (layout === 'compact') {
@@ -467,8 +496,8 @@ function renderTemplateLayout() {
           ${buildEducationSection()}
           ${buildSkillsSection()}
           ${buildTrainingSection()}
-          ${buildExtracurricularSection()}
           ${buildAwardsSection()}
+          ${buildExtracurricularSection()}
         </aside>
       </section>
     `;
@@ -485,8 +514,8 @@ function renderTemplateLayout() {
           ${buildEducationSection()}
           ${buildSkillsSection()}
           ${buildTrainingSection()}
-          ${buildExtracurricularSection()}
           ${buildAwardsSection()}
+          ${buildExtracurricularSection()}
         </aside>
         <section class="main-column">
           ${buildExperienceSection()}

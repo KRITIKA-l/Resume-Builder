@@ -58,6 +58,10 @@
   overflow-wrap: anywhere;
 }
 
+.resume-page[data-template="executive"] .sidebar .edu-degree-row {
+  display: block;
+}
+
 .resume-page[data-template="executive"] .main-column {
   gap: 10px;
 }
