@@ -316,7 +316,7 @@ body {
   color: #65758b;
 }
 
-@media (max-width: 900px) {
+@media screen and (max-width: 900px) {
   .contact-list {
     gap: 8px 14px;
   }
@@ -553,24 +553,42 @@ body {
   text-decoration: underline;
 }
 
+/* PRINT / PDF
+   The printable area is whatever the browser's print dialog gives us: it can
+   be smaller than A4 if the user's margins setting overrides `@page`. So the
+   page is sized by a percentage-height chain (html -> body -> shell ->
+   panel -> page) that follows the real printable area, never a fixed
+   11.69in that can overflow it and spill a blank second sheet.
+   Responsive `max-width` rules are scoped to `screen` above, so they can never
+   fire here and collapse a template's columns. */
 @media print {
+  html,
   body {
-    background: #fff;
+    height: 100%;
+    margin: 0;
     padding: 0;
+    background: #fff;
+    overflow: visible;
   }
 
   .app-shell {
     display: block;
+    height: 100%;
+    margin: 0;
+    padding: 0;
   }
 
   .form-panel {
-    display: none;
+    display: none !important;
   }
 
   .preview-panel {
-    border: 0;
-    box-shadow: none;
+    height: 100%;
+    margin: 0;
     padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
     overflow: visible;
   }
 
@@ -583,13 +601,20 @@ body {
   }
 
   .resume-page {
-    width: auto;
-    height: 11.69in;
+    width: 100%;
+    /* 1px of slack so sub-pixel rounding can't push onto a second page */
+    height: calc(100% - 1px);
     margin: 0;
-    padding: 0.5in 0.55in 0.5in;
     box-shadow: none;
-    border: none;
+    border: 0;
     overflow: hidden;
+    break-inside: avoid;
+    break-after: avoid;
+    page-break-after: avoid;
+    /* Keep each template's paper colour, tints and accent fills in the PDF
+       (browsers drop backgrounds when printing unless told otherwise). */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .contact-list a,
@@ -605,7 +630,7 @@ body {
   margin: 0;
 }
 
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
   .app-shell {
     grid-template-columns: 1fr;
   }
@@ -616,7 +641,7 @@ body {
   }
 }
 
-@media (max-width: 760px) {
+@media screen and (max-width: 760px) {
   body {
     padding: 12px;
   }

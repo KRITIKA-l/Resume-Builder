@@ -83,7 +83,7 @@
   margin-bottom: 6px;
 }
 
-@media (max-width: 760px) {
+@media screen and (max-width: 760px) {
   .resume-page[data-template="editorial"] .content-grid-editorial {
     grid-template-columns: 1fr;
   }

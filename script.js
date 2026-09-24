@@ -815,6 +815,16 @@ function renderRepeatableForms() {
   }
 }
 
+// Put the saved contact details back into the form inputs. Without this the
+// inputs start empty on every page load, and the first syncFromForm() then
+// overwrites the saved name/email/phone/links with those empty values.
+function hydrateFixedFields() {
+  Object.keys(state.contact).forEach((key) => {
+    const field = form.elements[key];
+    if (field) field.value = state.contact[key] || '';
+  });
+}
+
 function syncFixedFields() {
   state.contact = {
     name: form.elements.name.value.trim(),
@@ -1017,26 +1027,34 @@ printButton.addEventListener('click', () => {
   window.print();
 });
 
-// The on-screen preview column is narrower than a real printed A4 page, so
-// text wraps onto more lines there than it will on paper. Computing the fit
-// zoom against that narrow on-screen width (as a click handler running
-// before window.print() has to) produces a zoom that doesn't match how the
-// content actually lays out once printed. beforeprint fires after the
-// browser has already switched to the print stylesheet/page geometry, so
-// recomputing here measures the resume at its true print width and keeps
-// the PDF's proportions matching what's shown in the preview.
+// Print handling.
+// `beforeprint` fires while the page is still laid out for the SCREEN (the
+// preview column is narrower than A4 and the form is still visible), so a fit
+// measured there doesn't match the printed page. The `print` media query
+// change fires once the browser has switched to print geometry, so the fit is
+// re-run there, and again when it switches back to screen.
+const printQuery = window.matchMedia('print');
+
+if (printQuery.addEventListener) {
+  printQuery.addEventListener('change', fitResumeToOnePage);
+} else if (printQuery.addListener) {
+  // Older Safari.
+  printQuery.addListener(fitResumeToOnePage);
+}
+
 window.addEventListener('beforeprint', () => {
-  fitResumeToOnePage();
+  // Only trust the measurement if the browser has already applied print
+  // geometry; otherwise the change listener above will do it.
+  if (printQuery.matches) fitResumeToOnePage();
 });
 
-window.addEventListener('afterprint', () => {
-  fitResumeToOnePage();
-});
+window.addEventListener('afterprint', fitResumeToOnePage);
 
 window.addEventListener('resize', () => {
   fitResumeToOnePage();
 });
 
+hydrateFixedFields();
 renderRepeatableForms();
 renderTemplateLayout();
 syncFromForm();

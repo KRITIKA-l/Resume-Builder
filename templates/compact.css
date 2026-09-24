@@ -98,7 +98,7 @@
   font-weight: 700;
 }
 
-@media (max-width: 760px) {
+@media screen and (max-width: 760px) {
   .resume-page[data-template="compact"] .compact-footer {
     grid-template-columns: 1fr;
   }

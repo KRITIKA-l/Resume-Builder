@@ -101,7 +101,7 @@
   font-weight: 800;
 }
 
-@media (max-width: 760px) {
+@media screen and (max-width: 760px) {
   .resume-page[data-template="executive"] .content-grid-executive {
     grid-template-columns: 1fr;
   }
