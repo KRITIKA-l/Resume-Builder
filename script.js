@@ -8,6 +8,15 @@ const resetButton = document.getElementById('reset-btn');
 const printButton = document.getElementById('print-btn');
 let nameHeading = document.getElementById('name');
 const resumePage = document.querySelector('.resume-page');
+const resumeScaler = document.getElementById('resume-scaler');
+const fitWarning = document.getElementById('fit-warning');
+
+// A4 at 96 CSS px/in. The resume is always laid out on this fixed sheet (see
+// styles.css), so the preview and the printed PDF wrap text identically.
+const PAGE_W = 793.7;
+const PAGE_H = 1120.6; // 296.5mm, see .resume-page in styles.css
+// Bump when styles/scripts change so browsers never reuse stale cached copies.
+const ASSET_VERSION = '3';
 const templateStyleLink = document.getElementById('template-style');
 const templateBar = document.getElementById('template-bar');
 const themeBar = document.getElementById('theme-bar');
@@ -596,6 +605,12 @@ function fitResumeToOnePage() {
     const zoom = Math.max(availableHeight / contentHeight, MIN_ZOOM);
     pageFit.style.zoom = zoom;
   }
+
+  // Even at the smallest allowed zoom the content may not fit. The sheet clips
+  // anything past the bottom edge, so tell the user instead of failing silently.
+  if (fitWarning) {
+    fitWarning.hidden = !(availableHeight > 0 && contentHeight * 0.88 > availableHeight + 1);
+  }
 }
 
 // A saved template can replace the initial Classic stylesheet during startup.
@@ -674,8 +689,8 @@ function applyTemplate() {
   resumePage.dataset.template = templateKey;
 
   if (templateStyleLink) {
-    const templateHref = `templates/${templateKey}.css`;
-    if (!templateStyleLink.getAttribute('href')?.endsWith(templateHref)) {
+    const templateHref = `templates/${templateKey}.css?v=${ASSET_VERSION}`;
+    if (templateStyleLink.getAttribute('href') !== templateHref) {
       templateStyleLink.href = templateHref;
     }
   }
@@ -1027,34 +1042,80 @@ printButton.addEventListener('click', () => {
   window.print();
 });
 
-// Print handling.
-// `beforeprint` fires while the page is still laid out for the SCREEN (the
-// preview column is narrower than A4 and the form is still visible), so a fit
-// measured there doesn't match the printed page. The `print` media query
-// change fires once the browser has switched to print geometry, so the fit is
-// re-run there, and again when it switches back to screen.
-const printQuery = window.matchMedia('print');
+// ---------------------------------------------------------------------------
+// Preview scaling (screen only): the fixed A4 sheet is shrunk with a transform
+// so it fits the preview column. Layout inside the sheet never changes.
+// ---------------------------------------------------------------------------
+function updatePreviewScale() {
+  if (!resumePage || !resumeScaler) return;
+  const available = resumeScaler.clientWidth;
+  if (!available) return;
 
-if (printQuery.addEventListener) {
-  printQuery.addEventListener('change', fitResumeToOnePage);
-} else if (printQuery.addListener) {
-  // Older Safari.
-  printQuery.addListener(fitResumeToOnePage);
+  const scale = Math.min(1, available / PAGE_W);
+  resumePage.style.setProperty('--preview-scale', String(scale));
+  resumePage.style.marginLeft = `${Math.max(0, (available - PAGE_W * scale) / 2)}px`;
+  resumeScaler.style.height = `${PAGE_H * scale}px`;
 }
 
-window.addEventListener('beforeprint', () => {
-  // Only trust the measurement if the browser has already applied print
-  // geometry; otherwise the change listener above will do it.
-  if (printQuery.matches) fitResumeToOnePage();
-});
+if (resumeScaler && 'ResizeObserver' in window) {
+  new ResizeObserver(updatePreviewScale).observe(resumeScaler);
+} else {
+  window.addEventListener('resize', updatePreviewScale);
+}
 
-window.addEventListener('afterprint', fitResumeToOnePage);
+// ---------------------------------------------------------------------------
+// Printing. The sheet keeps its fixed A4 layout, so the fit computed for the
+// preview is already the fit for the PDF. The only thing that can differ is
+// the size of the printable area the browser hands us (custom margins, Letter
+// paper). #print-probe fills that area; we shrink the whole sheet to fit it.
+// ---------------------------------------------------------------------------
+const printProbe = document.createElement('div');
+printProbe.id = 'print-probe';
+document.body.appendChild(printProbe);
 
-window.addEventListener('resize', () => {
+const printQuery = window.matchMedia('print');
+
+function applyPrintScale() {
+  if (!resumePage) return;
+  const width = printProbe.offsetWidth;
+  const height = printProbe.offsetHeight;
+  let scale = 1;
+
+  if (width > 0 && height > 0) {
+    scale = Math.min(1, width / PAGE_W, height / PAGE_H);
+    if (scale > 0.99) scale = 1; // ignore sub-pixel rounding on a full A4 page
+  }
+
+  resumePage.style.setProperty('--print-scale', String(scale));
+  // The wrapper's height (what the browser paginates) must shrink with the sheet.
+  resumeScaler.style.setProperty('--print-height', `${PAGE_H * scale}px`);
+}
+
+function enterPrint() {
   fitResumeToOnePage();
-});
+  applyPrintScale();
+}
+
+function leavePrint() {
+  if (resumePage) resumePage.style.removeProperty('--print-scale');
+  if (resumeScaler) resumeScaler.style.removeProperty('--print-height');
+  updatePreviewScale();
+}
+
+if (printQuery.addEventListener) {
+  printQuery.addEventListener('change', (event) => (event.matches ? enterPrint() : leavePrint()));
+} else if (printQuery.addListener) {
+  // Older Safari.
+  printQuery.addListener((event) => (event.matches ? enterPrint() : leavePrint()));
+}
+
+// Fallbacks for browsers that don't fire the media-query change. The sheet's
+// layout is fixed, so fitting here is correct even before print styles apply.
+window.addEventListener('beforeprint', enterPrint);
+window.addEventListener('afterprint', leavePrint);
 
 hydrateFixedFields();
 renderRepeatableForms();
 renderTemplateLayout();
 syncFromForm();
+updatePreviewScale();

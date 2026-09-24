@@ -234,9 +234,21 @@ body {
   padding-bottom: 14px;
 }
 
-.resume-page {
+/* The resume is ALWAYS laid out on a fixed A4 sheet, on screen and in print,
+   so line wraps and the fit-to-one-page zoom are identical in the preview and
+   the PDF. The on-screen preview is that same sheet scaled down with a
+   transform (script.js sets --preview-scale); print resets the scale. */
+.resume-scaler {
   width: 100%;
-  height: 11.69in;
+  overflow: hidden;
+  position: relative;
+}
+
+.resume-page {
+  width: 210mm;
+  /* A hair under a full 297mm so rounding can never tip a printed sheet onto
+     a second page. */
+  height: 296.5mm;
   margin: 0;
   background: var(--paper);
   padding: 0.42in 0.5in 0.42in;
@@ -244,6 +256,26 @@ body {
   box-shadow: none;
   position: relative;
   overflow: hidden;
+  transform-origin: 0 0;
+  transform: scale(var(--preview-scale, 1));
+}
+
+.fit-warning {
+  margin: 8px 0 0 !important;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: #fff4e5;
+  color: #8a4b00 !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fit-warning[hidden] {
+  display: none;
+}
+
+#print-probe {
+  display: none;
 }
 
 .page-fit {
@@ -314,12 +346,6 @@ body {
   height: 11px;
   flex: 0 0 11px;
   color: #65758b;
-}
-
-@media screen and (max-width: 900px) {
-  .contact-list {
-    gap: 8px 14px;
-  }
 }
 
 /* Base content flow: a plain single column. Templates with a sidebar
@@ -554,67 +580,73 @@ body {
 }
 
 /* PRINT / PDF
-   The printable area is whatever the browser's print dialog gives us: it can
-   be smaller than A4 if the user's margins setting overrides `@page`. So the
-   page is sized by a percentage-height chain (html -> body -> shell ->
-   panel -> page) that follows the real printable area, never a fixed
-   11.69in that can overflow it and spill a blank second sheet.
-   Responsive `max-width` rules are scoped to `screen` above, so they can never
-   fire here and collapse a template's columns. */
+   The sheet keeps the same fixed A4 size and layout it has in the preview, so
+   the PDF matches what you see. It stays in normal flow (position: fixed or
+   absolute would depend on the page's scroll position) inside .resume-scaler,
+   whose height script.js controls, so the document is exactly one sheet tall
+   and can never paginate onto a second page. If the browser's print dialog
+   gives a smaller printable area than A4 (custom margins, Letter paper),
+   script.js sets --print-scale / --print-height so the whole sheet is shrunk
+   to fit instead of being cut off or spilling over. */
 @media print {
   html,
   body {
-    height: 100%;
     margin: 0;
     padding: 0;
     background: #fff;
+    height: auto;
     overflow: visible;
   }
 
-  .app-shell {
-    display: block;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  .form-panel {
-    display: none !important;
-  }
-
+  .app-shell,
   .preview-panel {
-    height: 100%;
+    display: block;
+    height: auto;
     margin: 0;
     padding: 0;
     border: 0;
     border-radius: 0;
     box-shadow: none;
+    background: none;
     overflow: visible;
   }
 
-  .preview-panel .panel-head {
-    display: none;
-  }
-
+  .form-panel,
+  .preview-panel .panel-head,
   .preview-empty {
     display: none !important;
   }
 
-  .resume-page {
+  .resume-scaler {
     width: 100%;
-    /* 1px of slack so sub-pixel rounding can't push onto a second page */
-    height: calc(100% - 1px);
-    margin: 0;
-    box-shadow: none;
-    border: 0;
+    height: var(--print-height, 296.5mm) !important;
     overflow: hidden;
     break-inside: avoid;
-    break-after: avoid;
     page-break-after: avoid;
-    /* Keep each template's paper colour, tints and accent fills in the PDF
-       (browsers drop backgrounds when printing unless told otherwise). */
+  }
+
+  .resume-page {
+    margin: 0 !important;
+    box-shadow: none;
+    border: 0;
+    transform-origin: 0 0;
+    transform: scale(var(--print-scale, 1)) !important;
+    /* Keep each template's paper colour, tints and accent fills in the PDF. */
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  /* Invisible box that fills the printable area; script.js measures it to
+     learn the real page size the browser is printing to. */
+  #print-probe {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .contact-list a,
@@ -648,15 +680,6 @@ body {
 
   .grid-2 {
     grid-template-columns: 1fr;
-  }
-
-  .resume-page {
-    width: 100%;
-    padding: 0.34in 0.26in 0.34in;
-  }
-
-  .header h1 {
-    font-size: 25px;
   }
 
   .panel-head-row {

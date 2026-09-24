@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Resume Builder</title>
-  <link rel="stylesheet" href="styles.css">
-  <link id="template-style" rel="stylesheet" href="templates/classic.css">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link id="template-style" rel="stylesheet" href="templates/classic.css?v=3">
 </head>
 <body>
   <main class="app-shell">
@@ -90,7 +90,10 @@
         <div id="template-bar" class="template-bar" aria-label="Resume templates"></div>
         <div id="theme-bar" class="template-bar" aria-label="Template themes"></div>
         <p>Updates in real time as you type.</p>
+        <p id="fit-warning" class="fit-warning" hidden>Heads up: this is too long for one page, so the bottom is cut off in the PDF. Shorten some bullets or remove an entry.</p>
       </div>
+
+      <div id="resume-scaler" class="resume-scaler">
 
       <article class="resume-page">
         <header class="header">
@@ -137,9 +140,10 @@
           </section>
         </section>
       </article>
+      </div>
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>
